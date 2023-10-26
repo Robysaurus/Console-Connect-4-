@@ -19,4 +19,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Connect 4++ Icon.ico">
+      <Filter>Source Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

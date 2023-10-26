@@ -2,9 +2,12 @@
 #include <format>
 #include <vector>
 #include <string>
+#include <conio.h>
 
 const std::string DEFAULT = "\033[0m";
 const std::string BLACK = "\033[38;2;0;0;0m";
+const std::string COLUMNS = "\033[38;2;0;255;255m";
+const std::string ROWS = "\033[38;2;0;255;0m";
 std::string BACKGROUND_COLOR = "";
 std::vector<std::vector<std::string>> board;
 int rows;
@@ -16,24 +19,44 @@ std::vector<std::string> playerRGBs;
 void printBoard() {
     std::cout << "\n";
     for (int i = 0; i < rows; i++) {
+        if (i < 9) {
+            std::cout << DEFAULT + ROWS + " " << (i + 1) << " ";
+        } else {
+            std::cout << DEFAULT + ROWS << (i + 1) << " ";
+        }
         for (int z = 0; z < cols; z++) {
             std::string color = playerRGBs[std::stoi(board[i][z])];
-            std::cout << BACKGROUND_COLOR + BLACK + "|";
-            std::cout << color + board[i][z];
-            std::cout << BLACK + "|" + DEFAULT;
+            std::cout << BACKGROUND_COLOR + BLACK + " " << color + board[i][z] << BLACK + " " + DEFAULT;
         }
         std::cout << "\n";
+    }
+    std::cout << "   ";
+    for (int i = 0; i < cols; i++) {
+        if (i < 9) {
+            std::cout << DEFAULT + COLUMNS + " " << (i + 1) << " ";
+        }else{
+            std::cout << DEFAULT + COLUMNS << (i + 1) << " ";
+        }
     }
     std::cout << DEFAULT << "\n";
 }
 
 bool checkSpace(int col) {
-    for (int i = 0; i <= (rows - 1); i++) {
+    for (int i = 0; i < rows; i++) {
         if (board[i][col] == "0") {
             return true;
         }
     }
     return false;
+}
+
+bool checkFullBoard() {
+    for (int i = 0; i < cols; i++) {
+        if (checkSpace(i) == true) {
+            return false;
+        }
+    }
+    return true;
 }
 
 int dropPiece(int col, int player) {
@@ -211,13 +234,11 @@ int main() {
     for (int i = 0; i < rows; i++) {
         board[i].resize(cols);
     }
-
     for (int i = 0; i < rows; i++) {
         for (int z = 0; z < cols; z++) {
             board[i][z] = "0";
         }
     }
-
     std::cout << "\nHow many pieces in a row should be required to win? (Minimum is 4): ";
     while (true) {
         std::cin >> inARow;
@@ -227,7 +248,6 @@ int main() {
             break;
         }
     }
-
     std::cout << "\n\nHow many people are playing? (Minimum is 2): ";
     while (true) {
         std::cin >> numPlayers;
@@ -274,13 +294,22 @@ int main() {
     bool loop = true;
     while (loop) {
         for (int i = 1; i <= numPlayers; i++) {
-            bool win = takeTurn(i);
-            printBoard();
-            if (win) {
-                std::cout << "\n\n" << playerRGBs[i] << "Player " << i << " WON!" << DEFAULT << "\n\n";
+            bool full = checkFullBoard();
+            if (!full) {
+                bool win = takeTurn(i);
+                printBoard();
+                if (win) {
+                    std::cout << "\n\n" << playerRGBs[i] << "Player " << i << " WON!" << DEFAULT << "\n\n";
+                    loop = false;
+                    break;
+                }
+            } else {
+                std::cout << DEFAULT + "\n\nThe board is full! It's a TIE!\n\n";
                 loop = false;
                 break;
             }
         }
     }
+    std::cout << "Press any key to close this window . . .";
+    int w = _getch();
 }

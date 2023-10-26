@@ -133,6 +133,9 @@
   <ItemGroup>
     <ClCompile Include="Console Connect 4++.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Connect 4++ Icon.ico" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
