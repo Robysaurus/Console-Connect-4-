@@ -26,7 +26,7 @@ void printBoard() {
         }
         for (int z = 0; z < cols; z++) {
             std::string color = playerRGBs[std::stoi(board[i][z])];
-            std::cout << BACKGROUND_COLOR + BLACK + " " << color + board[i][z] << BLACK + " " + DEFAULT;
+            std::cout << BACKGROUND_COLOR + BLACK << color + board[i][z] << BLACK + " " + DEFAULT;
         }
         std::cout << "\n";
     }
@@ -34,7 +34,7 @@ void printBoard() {
     for (int i = 0; i < cols; i++) {
         if (i < 9) {
             std::cout << DEFAULT + COLUMNS + " " << (i + 1) << " ";
-        }else{
+        } else {
             std::cout << DEFAULT + COLUMNS << (i + 1) << " ";
         }
     }
@@ -43,7 +43,7 @@ void printBoard() {
 
 bool checkSpace(int col) {
     for (int i = 0; i < rows; i++) {
-        if (board[i][col] == "0") {
+        if (board[i][col] == "00") {
             return true;
         }
     }
@@ -62,9 +62,14 @@ bool checkFullBoard() {
 int dropPiece(int col, int player) {
     int row = -1;
     for (int i = (rows - 1); i >= 0; i--) {
-        if (board[i][col] == "0") {
+        if (board[i][col] == "00") {
             row = i;
-            board[i][col] = std::format("{}{}", "", player);
+            if (player < 10) {
+                board[i][col] = std::format("{}{}", "", std::format("{}{}", "0", player));
+            } else {
+                board[i][col] = std::format("{}{}", "", player);
+            }
+            
             break;
         }
     }
@@ -236,14 +241,14 @@ int main() {
     }
     for (int i = 0; i < rows; i++) {
         for (int z = 0; z < cols; z++) {
-            board[i][z] = "0";
+            board[i][z] = "00";
         }
     }
     std::cout << "\nHow many pieces in a row should be required to win? (Minimum is 4): ";
     while (true) {
         std::cin >> inARow;
         if (inARow < 4 || inARow >(fmin(rows, cols) - 1)) {
-            std::cout << "Sorry, the number of pieces un a row to win must be at least 4 and\nless than the minimum between the number of rows and columns minus 1.\nTry again: ";
+            std::cout << "Sorry, the number of pieces un a row to win must be at least 4 and\nat most the minimum between the number of rows and columns minus 1.\nTry again: ";
         } else {
             break;
         }
