@@ -262,6 +262,7 @@ int main() {
             break;
         }
     }
+    std::cout << "\033[H\033[2J\033[3J";
     playerRGBs.resize(1);
     playerRGBs[0] = BLACK;
     for (int i = 1; i <= numPlayers; i++) {
@@ -294,7 +295,7 @@ int main() {
         }
         playerRGBs.push_back(std::format("\033[38;2;{};{};{}m", r, g, b));
     }
-    std::cout << "\n\n";
+    std::cout << "\033[H\033[2J\033[3J";
     printBoard();
     bool loop = true;
     while (loop) {
@@ -302,6 +303,7 @@ int main() {
             bool full = checkFullBoard();
             if (!full) {
                 bool win = takeTurn(i);
+                std::cout << "\033[H\033[2J\033[3J";
                 printBoard();
                 if (win) {
                     std::cout << "\n\n" << playerRGBs[i] << "Player " << i << " WON!" << DEFAULT << "\n\n";
